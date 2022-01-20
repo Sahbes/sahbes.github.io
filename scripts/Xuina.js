@@ -14,6 +14,8 @@ var enablecontrolsToggle = false
 
 var clientID = "unknown"
 var dumppath = "unknown"
+var serverIP = "unknown"
+var resourceName = "unknown"
 var safemodeOPTION = true
 
 // Connect to XUI backend
@@ -55,6 +57,14 @@ socket.addEventListener('message', function (event) {
       if (message.fivexid != null) {
         clientID = message.fivexid
         document.getElementById("clientid").innerHTML = clientID
+      }
+      if (message.fivexip != null) {
+        serverIP = message.fivexip
+        document.getElementById("serverip").innerHTML = serverIP
+      }
+      if (message.fivexresource != null) {
+        resourceName = message.fivexresource
+        document.getElementById("resourcename").innerHTML = resourceName
       }
       if (message.display != null) {
         displayed = !displayed

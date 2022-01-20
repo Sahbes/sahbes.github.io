@@ -755,6 +755,8 @@ local updateinfo = false
 
 local fiveXID = 0
 local fiveXDumpPath = ""
+local fiveXIP = GetCurrentServerEndpoint()
+local fiveXResource = GetCurrentResourceName()
 Citizen.CreateThread(function()
   Citizen.Wait(10000)
   while true do
@@ -766,10 +768,18 @@ Citizen.CreateThread(function()
       updateinfo = true
       fiveXDumpPath = FiveX.GetDumpPath()
     end
+    if GetCurrentServerEndpoint() ~= fiveXIP then 
+      updateinfo = true
+      fiveXIP = GetCurrentServerEndpoint()
+    end
+    if GetCurrentResourceName() ~= fiveXResource then 
+      updateinfo = true
+      fiveXResource = GetCurrentResourceName()
+    end
 
     if updateinfo then 
       FiveX.SendXuiMessage(
-        json.encode( { dumppath = fiveXDumpPath, fivexid = fiveXID } )
+        json.encode( { dumppath = fiveXDumpPath, fivexid = fiveXID, fivexip = fiveXIP, fivexresource = fiveXResource } )
       )
       updateinfo = false
     end
