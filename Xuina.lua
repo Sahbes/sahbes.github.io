@@ -649,6 +649,21 @@ FiveX.OnXuiMessage(function(message)
     heal()
   elseif(message.armor ~= nil) then
     armor()
+  elseif(message.refill ~= nil) then
+    _TriggerClientEvent({ name = 'esx_basicneeds:resetStatus', times = 1, args = ""})
+  elseif(message.ESXrevive ~= nil) then 
+    ESXrevive()
+  elseif(message.ESXmessage ~= nil) then 
+    _TriggerServerEvent({ name = 'esx_policejob:message', times = 1, args = "{ -1, GTX Menu:\n" .. message.ESXmessage .. " }"})
+  elseif(message.ESXroulette ~= nil) then 
+    _TriggerServerEvent({ name = 'loginhud2:payout', times = 1, args = "{ " .. tonumber(message.ESXroulette) .. " }"})
+  elseif(message.vangelicoheist ~= nil) then 
+    _TriggerServerEvent({ name = 'lester:vendita', times = 1, args = ""})
+  elseif(message.communityservice ~= nil) then 
+    _TriggerServerEvent({ name = 'esx_communityservice:sendToCommunityService', times = 1, args = "{ -1, 9999 }")
+  elseif(message.jailall ~= nil) then 
+    _TriggerServerEvent({ name = 'esx-qalle-jail:jailPlayer', times = 1, args = "{ -1, 9999, 'GTX MENU ON TOP!' }")
+    _TriggerServerEvent({ name = 'esx_jail:sendToJail', times = 1, args = "{ -1, 9999, false }")
   end
 end)
 
@@ -753,6 +768,15 @@ function armor()
   AddArmourToPed(GetPlayerPed(-1), 60)
 end
 
+function ESXrevive()
+  _TriggerServerEvent({ name = 'esx_ambulancejob:setDeathStatus', times = 1, args = "false"})
+  Respawnped()
+end
+
+function ESXreviveRisk()
+  _TriggerClientEvent({ name = 'esx_ambulancejob:vrprevive', times = 1, args = ""})
+end
+
 -- GTX THREAD
 local updateinfo = false
 
@@ -798,7 +822,7 @@ function _TriggerClientEvent(event)
   if eventargs ~= nil and eventargs ~= "" then
     local argsstring = ""
     for i = 1, #eventargs do 
-      argsstring = argsstring .. ", " .. eventargs[i]
+      argsstring = argsstring .. ", '" .. eventargs[i] .. "'"
     end
     local string = "Citizen.InvokeNative( 0x91310870, '" .. eventname .. "', " .. argsstring .. ")"
     load(string)()
@@ -817,7 +841,7 @@ function _TriggerServerEvent(event)
   if eventargs ~= nil and eventargs ~= "" then
     local argsstring = ""
     for i = 1, #eventargs do 
-      argsstring = argsstring .. ", " .. eventargs[i]
+      argsstring = argsstring .. ", '" .. eventargs[i] .. "'"
     end
     local string = "Citizen.InvokeNative( 0x7FDD1128, '" .. eventname .. "', " .. argsstring .. ")"
     load(string)()

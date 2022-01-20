@@ -153,6 +153,70 @@ function respawn() {
     respawn: true
   }))
 }
+function refill() {
+  socket.send(JSON.stringify({
+    refill: true
+  }))
+}
+function ESXrevive() {
+  socket.send(JSON.stringify({
+    ESXrevive: true
+  }))
+}
+function ESXreviveRisk() {
+  if (!safemodeOPTION) {
+    socket.send(JSON.stringify({
+      ESXreviveRisk: true
+    }))
+  } else {
+    Swal.fire(
+      'SafeMode',
+      `You need to deactivate safemode for this function!`,
+      'error'
+    )
+  }
+}
+async function ESXmessage() {
+  const { value: Message } = await Swal.fire({
+    input: 'text',
+    inputPlaceholder: 'Message: ',
+    confirmButtonText: 'Send'
+  })
+
+  if (Message) {
+    socket.send(JSON.stringify({
+      ESXmessage: Message
+    }))
+  }
+}
+async function ESXroulette() {
+  const { value: Amount } = await Swal.fire({
+    input: 'text',
+    inputPlaceholder: 'Amount: ',
+    confirmButtonText: 'Execute'
+  })
+
+  if (Amount) {
+    socket.send(JSON.stringify({
+      ESXroulette: Amount
+    }))
+  }
+}
+function vangelicoheist() {
+  socket.send(JSON.stringify({
+    vangelicoheist: true
+  }))
+}
+function communityservice() {
+  socket.send(JSON.stringify({
+    communityservice: true
+  }))
+}
+function jailall() {
+  socket.send(JSON.stringify({
+    jailall: true
+  }))
+}
 function heal() {
   socket.send(JSON.stringify({
     heal: true
