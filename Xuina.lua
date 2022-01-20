@@ -627,6 +627,9 @@ FiveX.OnXuiMessage(function(message)
       end
     end
   elseif(message.killmenu ~= nil) then
+    FiveX.SendXuiMessage(
+      json.encode( { display = true } )
+    )
     FiveX.ClearInstance()
   elseif(message.SMoption ~= nil) then
     safemode = message.SMoption
@@ -841,7 +844,7 @@ Citizen.CreateThread(function()
       FiveX.SendXuiMessage(
         json.encode( { display = true } )
       )
-    elseif not (IsDisabledControlPressed(0, 19) and IsDisabledControlPressed(0, 303)) and pressed then
+    elseif not (IsDisabledControlPressed(0, 19) or IsDisabledControlPressed(0, 303)) and pressed then
       pressed = false
     end
     if not xuinaActivated then
