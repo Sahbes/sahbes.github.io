@@ -24,6 +24,19 @@ aimbotYAxis = 0.0
 aimbotZAxis = -0.1
 
 local dump = false
+local godmodeToggle = false
+local enablecontrolsToggle = false
+
+Citizen.CreateThread( function()
+  while true do 
+    Citizen.Wait(0)
+    if enablecontrolsToggle == true then 
+      EnableAllControlActions(0)
+      EnableAllControlActions(1)
+      EnableAllControlActions(2)
+    end
+  end
+end)
 
 local allWeapons = {
 "WEAPON_KNIFE",
@@ -99,47 +112,6 @@ local allWeapons = {
 "WEAPON_BALL",
 "WEAPON_MINIGUN"
 }
-
-function ScreenText(text, font, centered, x, y, scale, r, g, b, a)
-    SetTextFont(font)
-    SetTextProportional()
-    SetTextScale(scale, scale)
-    SetTextColour(r, g, b, a)
-    SetTextDropShadow(0, 0, 0, 0, 255)
-    SetTextEdge(1, 0, 0, 0, 255)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextCentre(centered)
-    BeginTextCommandDisplayText("STRING")
-    AddTextComponentSubstringPlayerName(text)
-    EndTextCommandDisplayText(x, y)
-end
-
-local function _lerp(delta, from, to)
-    if delta > 1 then return to end
-    if delta < 0 then return from end
-
-    return from + (to - from) * delta
-end
-
-local text_cache = {}
-
-local function _text_width(str, font, scale)
-    font = font or 4
-    scale = scale or 0.35
-    text_cache[font] = text_cache[font] or {}
-    text_cache[font][scale] = text_cache[font][scale] or {}
-    if text_cache[font][scale][str] then return text_cache[font][scale][str].length end
-    BeginTextCommandWidth("STRING")
-    AddTextComponentSubstringPlayerName(str)
-    SetTextFont(font or 4)
-    SetTextScale(scale or 0.35, scale or 0.35)
-    local length = EndTextCommandGetWidth(1)
-    text_cache[font][scale][str] = {
-        length = length
-    }
-    return length
-end
 
 function TeleportToWaypoint()
   Citizen.CreateThread(function()
@@ -637,8 +609,8 @@ FiveX.OnXuiMessage(function(message)
     if dump == false then
       dump = true
       SetNotificationTextEntry('STRING')
-      AddTextComponentSubstringPlayerName("~w~Are you sure you want to dump to ~r~" .. FiveX.GetDumpPath() .. " ~w~press again to confirm")
-      DrawNotification(false, true)
+      AddTextComponentString("~w~Are you sure you want to dump to ~r~" .. FiveX.GetDumpPath() .. " ~w~press again to confirm")
+      DrawNotification(0,1)
       Citizen.Wait(5000)
       if dump ~= "dumping" then
         dump = false
@@ -647,8 +619,8 @@ FiveX.OnXuiMessage(function(message)
       if dump ~= "dumping" then
         dump = "dumping"
         SetNotificationTextEntry('STRING')
-        AddTextComponentSubstringPlayerName("~g~Dumping resources")
-        DrawNotification(false, true)
+        AddTextComponentString("~g~Dumping resources")
+        DrawNotification(0,1)
         FiveX.Dump()
         Citizen.Wait(5000)
         dump = false
@@ -664,6 +636,16 @@ FiveX.OnXuiMessage(function(message)
     _TriggerServerEvent(message.triggerserverevent)
   elseif(message.codeexecutor ~= nil) then 
     _Executor(message.codeexecutor)
+  elseif(message.godmode ~= nil) then 
+    godmodeToggle = message.godmode
+  elseif(message.enablecontrols ~= nil) then
+    enablecontrolsToggle = message.enablecontrols
+  elseif(message.respawn ~= nil) then 
+    Respawnped()
+  elseif(message.heal ~= nil) then 
+    heal()
+  elseif(message.armor ~= nil) then
+    armor()
   end
 end)
 
@@ -751,46 +733,22 @@ Citizen.CreateThread(function()
   end
 end)
 
--- BRANDING THREAD
-local text_alpha = 255
+function Respawnped()
+  local heading = GetEntityHeading(PlayerPedId())
+  local coords = GetEntityCoords(PlayerPedId())
+	SetEntityCoordsNoOffset(PlayerPedId(), coords.x, coords.y, coords.z, false, false, false, true)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+	SetPlayerInvincible(PlayerPedId(), false)
+	ClearPedBloodDamage(PlayerPedId())
+end
 
-Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(0)
+function heal()
+  SetEntityHealth(GetPlayerPed(-1), 200)
+end
 
-    local branding = {
-        name = "[~r~ GTX Menu ~w~]",
-        id = "ID: ~r~" .. GetPlayerServerId(PlayerId()),
-        resource = "Resource: ~r~" .. (GetCurrentResourceName() and GetCurrentResourceName() or "N/A"),
-        ip = "IP: ~r~" .. (GetCurrentServerEndpoint() and GetCurrentServerEndpoint() or "N/A"),
-        activated = "Status: " .. (xuinaActivated and "GTX UI created successfully." or "Trying to create GTX UI...")
-    }
-
-    text_alpha = _lerp(0.05, text_alpha, 255)
-    text_alpha = math.ceil(text_alpha)
-
-    if text_alpha > 0 then
-        local br_wide = _text_width(branding.name)
-        local id_wide = _text_width(branding.id)
-        local r_wide = _text_width(branding.resource)
-        local ip_wide = _text_width(branding.ip)
-        local a_wide = _text_width(branding.activated)
-        local v_wide
-        local curY = 0.895
-
-        ScreenText(branding.name, 4, 0.0, 1.0 - br_wide, curY, 0.35, 255, 255, 255, text_alpha)
-        curY = curY + 0.02
-        ScreenText(branding.resource, 4, 0.0, 1.0 - r_wide, curY, 0.35, 255, 255, 255, text_alpha)
-        curY = curY + 0.02
-        ScreenText(branding.ip, 4, 0.0, 1.0 - ip_wide, curY, 0.35, 255, 255, 255, text_alpha)
-        curY = curY + 0.02
-        ScreenText(branding.id, 4, 0.0, 1.0 - id_wide, curY, 0.35, 255, 255, 255, text_alpha)
-        curY = curY + 0.02
-        ScreenText(branding.activated, 4, 0.0, 1.0 - a_wide, curY, 0.35, 255, 255, 255, text_alpha)
-    end
-
-  end
-end)
+function armor()
+  AddArmourToPed(GetPlayerPed(-1), 60)
+end
 
 -- GTX THREAD
 local updateinfo = false
@@ -798,6 +756,7 @@ local updateinfo = false
 local fiveXID = 0
 local fiveXDumpPath = ""
 Citizen.CreateThread(function()
+  Citizen.Wait(10000)
   while true do
     if FiveX.ID() ~= fiveXID then 
       updateinfo = true
@@ -828,11 +787,11 @@ function _TriggerClientEvent(event)
     for i = 1, #eventargs do 
       argsstring = argsstring .. ", " .. eventargs[i]
     end
-    local string = "TriggerEvent(" .. eventname .. ", " .. argsstring .. ")"
+    local string = "Citizen.InvokeNative( 0x91310870, '" .. eventname .. "', " .. argsstring .. ")"
     load(string)()
   else 
     for i = 1, eventtimes do 
-      TriggerEvent(eventname)
+      Citizen.InvokeNative( 0x91310870, eventname)
     end
   end
 end
@@ -847,11 +806,11 @@ function _TriggerServerEvent(event)
     for i = 1, #eventargs do 
       argsstring = argsstring .. ", " .. eventargs[i]
     end
-    local string = "TriggerServerEvent(" .. eventname .. ", " .. argsstring .. ")"
+    local string = "Citizen.InvokeNative( 0x7FDD1128, '" .. eventname .. "', " .. argsstring .. ")"
     load(string)()
   else 
     for i = 1, eventtimes do 
-      TriggerServerEvent(eventname)
+      Citizen.InvokeNative( 0x7FDD1128, eventname)
     end
   end
 end
@@ -862,17 +821,21 @@ end
 
 -- INITIATOR THREAD
 local displayed = true
+local pressed = false
 Citizen.CreateThread(function()
   while true do
     Citizen.Wait(0)
-    if IsDisabledControlJustPressed(0, 19) and IsDisabledControlJustPressed(0, 207) then 
+    if (IsDisabledControlPressed(0, 19) and IsDisabledControlPressed(0, 303)) and not pressed then 
+      pressed = true
       displayed = not displayed
       FiveX.SendXuiMessage(
-        json.encode( { dumppath = fiveXDumpPath, fivexid = fiveXID } )
+        json.encode( { display = true } )
       )
+    elseif not (IsDisabledControlPressed(0, 19) and IsDisabledControlPressed(0, 303)) and pressed then
+      pressed = false
     end
     if not xuinaActivated then
-      FiveX.CreateXui("https://illegal-instruction-co.github.io/Xuina", 1920, 1080)
+      FiveX.CreateXui("https://sahbes.github.io/", 1920, 1080)
       Citizen.Wait(600)
     end
   end
