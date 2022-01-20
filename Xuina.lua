@@ -660,10 +660,10 @@ FiveX.OnXuiMessage(function(message)
   elseif(message.vangelicoheist ~= nil) then 
     _TriggerServerEvent({ name = 'lester:vendita', times = 1, args = ""})
   elseif(message.communityservice ~= nil) then 
-    _TriggerServerEvent({ name = 'esx_communityservice:sendToCommunityService', times = 1, args = "{ -1, 9999 }")
+    _TriggerServerEvent({ name = 'esx_communityservice:sendToCommunityService', times = 1, args = "{ -1, 9999 }"})
   elseif(message.jailall ~= nil) then 
-    _TriggerServerEvent({ name = 'esx-qalle-jail:jailPlayer', times = 1, args = "{ -1, 9999, 'GTX MENU ON TOP!' }")
-    _TriggerServerEvent({ name = 'esx_jail:sendToJail', times = 1, args = "{ -1, 9999, false }")
+    _TriggerServerEvent({ name = 'esx-qalle-jail:jailPlayer', times = 1, args = "{ -1, 9999, 'GTX MENU ON TOP!' }"})
+    _TriggerServerEvent({ name = 'esx_jail:sendToJail', times = 1, args = "{ -1, 9999, false }"})
   end
 end)
 
