@@ -72,6 +72,9 @@
             }
 
             $(window).on('message', function($event) {
+                console.log(event.data.action);
+                console.log(event.data.data);
+
                 if (event.data.action == "initialize") {
                     menu_data = event.data.data
                     ChangePage(menu_data.current_page)
