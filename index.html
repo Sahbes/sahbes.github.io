@@ -108,7 +108,9 @@
             });
 
             function ChangePage(newPage) {
-                menu_data.current_selection = 1;
+                if (menu.current_page != newPage) {
+                    menu_data.current_selection = 1;
+                }
 
                 if (newPage == "close") {
                     $.post("https://"+menu_data.resource+"/close", JSON.stringify({}));
@@ -130,6 +132,12 @@
 
                       title.appendChild(title_span);
                       container.appendChild(title);
+
+                      if (menu_data.current_selection < 1) {
+                        menu_data.current_selection = 1
+                      } else if (menu_data.current_selection > menu_data.menu[i].options.length) {
+                        menu_data.current_selection = menu_data.menu[i].options.length
+                      }
 
                       for (let j = 0; j < menu_data.menu[i].options.length; j++) {
                           let div = document.createElement("div");
