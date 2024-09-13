@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
         <title>Sahbes</title>
         <style>
             * {
@@ -40,6 +41,11 @@
             }
         </style>
         <script>
+            $(window).on('message', function($event) {
+                console.log(event.data.action);
+                console.log(event.data.data);
+            });
+
             let menu_style = "default";
             let current_page = "Sahbes";
 
@@ -90,7 +96,7 @@
             }
 
             function ChangeStyle(style) {
-              console.log("STYLING")
+                $.post("https://duiRepro/ready", JSON.stringify({}));
             }
         </script>
     </head>
