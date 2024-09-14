@@ -137,6 +137,8 @@
 
             function ActionButton(data) {
                 if (data.type == "page") {
+                    menu_data.current_selection = 1;
+                    console.log("NEW PAGE "+data.page)
                     ChangePage(data.page);
                 } else if (data.type == "print") {
                     console.log(data.message);
@@ -168,7 +170,9 @@
                     if (event.data.data == "back") {
                         for (let i = 0; i < menu_data.menu.length; i++) {
                             if (menu_data.menu[i].title == menu_data.current_page) {
+                                menu_data.current_selection = 1;
                                 ChangePage(menu_data.menu[i].parent)
+                                console.log("RESET PAGE "+menu_data.menu[i].parent)
                                 break;
                             }
                         }
@@ -192,9 +196,7 @@
             });
 
             function ChangePage(newPage) {
-                if (menu.current_page != newPage) {
-                    menu_data.current_selection = 1;
-                }
+                console.log("LOADING PAGE: "+newPage)
 
                 if (newPage == "close") {
                     $.post("https://"+menu_data.resource+"/close", JSON.stringify({}));
