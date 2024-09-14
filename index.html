@@ -154,6 +154,7 @@
                 if (event.data.action == "initialize") {
                     menu_data = event.data.data
                     ChangePage(menu_data.current_page)
+                    console.log("INITIALIZING")
                 } else if (event.data.action == "toggle") {
                     for (let i = 0; i < menu_data.menu.length; i++) {
                         for (let j = 0; j < menu_data.menu[i].options.length; j++) {
