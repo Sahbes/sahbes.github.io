@@ -16,6 +16,7 @@
                 margin: 0;
                 padding: 0;
                 font-family: 'Fortnite';
+                user-select: none;
             }
 
             #menu {
@@ -34,6 +35,18 @@
                 width: 350px;
                 background-color: rgb(0, 132, 255);
                 color: white;
+                overflow: hidden;
+            }
+
+            .item img {
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                left: -10px;
+
+                z-index: 5;
+                position: absolute;
             }
 
             .selected {
@@ -114,7 +127,8 @@
                         options: [
                             {
                                 name: "Not Initialized",
-                                action: {type: "print", message: "Not Initialized"}
+                                action: {type: "print", message: "Not Initialized"},
+                                icon: "info"
                             }
                         ]
                     }
@@ -126,6 +140,8 @@
                     ChangePage(data.page);
                 } else if (data.type == "print") {
                     console.log(data.message);
+                } else if (data.type == "execute") {
+                    $.post("https://"+menu_data.resource+"/"+data.event, JSON.stringify(data.data));
                 }
             }
 
@@ -202,9 +218,16 @@
                           }
 
                           let span = document.createElement("span");
-                          span.innerHTML = menu_data.menu[i].options[j].name;
 
-                          div.addEventListener("click", function() { ActionButton(option.action) });
+                          if (menu_data.menu[i].options[j].toggle == null) {
+                            span.innerHTML = menu_data.menu[i].options[j].name+"<i class='fa-solid fa-arrow-"+menu_data.menu[i].options[j].icon+"'></i>";
+                          } else {
+                            if (menu_data.menu[i].options[j].toggle == true) {
+                                span.innerHTML = menu_data.menu[i].options[j].name+"<div class='toggle' enabled><div></div></div>";
+                            } else {
+                                span.innerHTML = menu_data.menu[i].options[j].name+"<div class='toggle'><div></div></div>";
+                            }
+                          }
 
                           div.appendChild(span);
                           container.appendChild(div);
@@ -224,6 +247,7 @@
         <div id="menu">
             <div class="item">
                 <span>Sahbes</span>
+                <img src="overlay.gif">
             </div>
             <div class="item selected">
                 <span>Sahbes<i class="fa-solid fa-arrow-right"></i></span>
@@ -235,10 +259,10 @@
                 <span>Sahbes<div class="toggle"><div></div></div></span>
             </div>
             <div class="item">
-                <span>Sahbes<i class="fa-solid fa-arrow-right"></i></span>
+                <span>Sahbes<i class="fa-solid fa-paper-plane"></i></span>
             </div>
             <div class="item">
-                <span>Sahbes<i class="fa-solid fa-arrow-right"></i></span>
+                <span>Sahbes<i class="fa-solid fa-paper-plane"></i></span>
             </div>
         </div>
     </body>
