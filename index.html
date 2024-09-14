@@ -184,10 +184,12 @@
                             }
                         }
                     } else if (event.data.data == "up") {
+                        console.log(menu_data.current_selection)
                         menu_data.current_selection--;
                         console.log(menu_data.current_selection)
                         ChangePage(menu_data.current_page);
                     } else if (event.data.data == "down") {
+                        console.log(menu_data.current_selection)
                         menu_data.current_selection++;
                         console.log(menu_data.current_selection)
                         ChangePage(menu_data.current_page);
@@ -220,7 +222,8 @@
                       container.appendChild(title);
 
                       if (menu_data.current_selection < 1) {
-                        menu_data.current_selection = 1
+                        menu_data.current_selection = 1;
+                        console.log("UNDER 1 IS NOT POSSIBLE")
                       } else if (menu_data.current_selection > menu_data.menu[i].options.length) {
                         menu_data.current_selection = menu_data.menu[i].options.length
                       }
@@ -252,10 +255,6 @@
                       break;
                   }
                 }
-            }
-
-            function ChangeStyle(style) {
-                $.post("https://duiRepro/ready", JSON.stringify({}));
             }
         </script>
     </head>
