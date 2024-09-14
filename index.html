@@ -3,12 +3,19 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://kit.fontawesome.com/785f20ebf0.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
         <title>Sahbes</title>
         <style>
+            @font-face {
+                font-family: 'Fortnite';
+                src: url('Fortnite.ttf');
+            }
+
             * {
                 margin: 0;
                 padding: 0;
+                font-family: 'Fortnite';
             }
 
             #menu {
@@ -18,32 +25,79 @@
                 left: 10%;
                 top: 20%;
                 align-items: center;
-                border-radius: 2.5px;
+                border-radius: 5px;
                 box-shadow: 0 0 15px black;
             }
 
             .item {
                 position: relative;
                 width: 350px;
-                text-align: center;
-                background-color: white;
-                color: black;
+                background-color: rgb(0, 132, 255);
+                color: white;
             }
 
             .selected {
-                background-color: rgb(159, 159, 159);
+                background-color: rgb(19, 62, 101);
             }
 
             .item:first-child {
-                background-color: blue;
+                background: linear-gradient(30deg, rgb(12, 54, 192) ,rgb(12, 117, 192));
                 color: white;
+            }
+
+            .item:nth-child(2) {
+                box-shadow: inset 0 15px 15px -15px black;
             }
 
             .item span {
                 display: block;
+                text-align: left;
+                padding: 15px 15px;
+                font-size: 20px;
+            }
+
+            .item span i {
+                position: absolute;
+                right: 15px;
+            }
+
+            .item:first-child span {
+                text-align: center;
                 padding: 22.5px 0;
                 font-size: 40px;
-                font-weight: bold;
+            }
+
+            .toggle {
+                position: absolute;
+                height: 20px;
+                width: 40px;
+                border: 2px solid white;
+                border-radius: 20px;
+                background-color: red;
+
+                top: 50%;
+                right: 15px;
+                transform: translateY(-50%);
+            }
+
+            .toggle[enabled] {
+                background-color: green;
+            }
+
+            .toggle div {
+                position: absolute;
+                height: 20px;
+                width: 20px;
+                background-color: white;
+                border-radius: 20px;
+
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+            }
+
+            .toggle[enabled] div {
+                left: 20px;
             }
         </style>
         <script>
@@ -170,6 +224,21 @@
         <div id="menu">
             <div class="item">
                 <span>Sahbes</span>
+            </div>
+            <div class="item selected">
+                <span>Sahbes<i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="item">
+                <span>Sahbes<div class="toggle" enabled><div></div></div></span>
+            </div>
+            <div class="item">
+                <span>Sahbes<div class="toggle"><div></div></div></span>
+            </div>
+            <div class="item">
+                <span>Sahbes<i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="item">
+                <span>Sahbes<i class="fa-solid fa-arrow-right"></i></span>
             </div>
         </div>
     </body>
