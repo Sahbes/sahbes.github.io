@@ -152,6 +152,18 @@
                 if (event.data.action == "initialize") {
                     menu_data = event.data.data
                     ChangePage(menu_data.current_page)
+                } else if (event.data.action == "toggle") {
+                    for (let i = 0; i < menu_data.menu.length; i++) {
+                        for (let j = 0; j < menu_data.menu[i].options.length; j++) {
+                            if (menu_data.menu[i].options[j].toggle == null) {
+                                if (menu_data.menu[i].options[j].action.data.option == event.data.data.option) {
+                                    menu_data.menu[i].options[j].toggle = event.data.data.value
+                                }
+                            }
+                        }
+                    }
+
+                    ChangePage(menu_data.current_page)
                 } else if (event.data.action == "input") {
                     if (event.data.data == "back") {
                         for (let i = 0; i < menu_data.menu.length; i++) {
@@ -168,10 +180,12 @@
                             }
                         }
                     } else if (event.data.data == "up") {
-                        menu_data.current_selection++;
+                        menu_data.current_selection--;
+                        console.log(menu_data.current_selection)
                         ChangePage(menu_data.current_page);
                     } else if (event.data.data == "down") {
-                        menu_data.current_selection--;
+                        menu_data.current_selection++;
+                        console.log(menu_data.current_selection)
                         ChangePage(menu_data.current_page);
                     }
                 }
