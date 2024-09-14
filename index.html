@@ -158,7 +158,7 @@
                 } else if (event.data.action == "toggle") {
                     for (let i = 0; i < menu_data.menu.length; i++) {
                         for (let j = 0; j < menu_data.menu[i].options.length; j++) {
-                            if (menu_data.menu[i].options[j].toggle == null) {
+                            if (menu_data.menu[i].options[j].toggle != null) {
                                 if (menu_data.menu[i].options[j].action.data.option == event.data.data.option) {
                                     menu_data.menu[i].options[j].toggle = event.data.data.value
                                 }
@@ -173,34 +173,28 @@
                             if (menu_data.menu[i].title == menu_data.current_page) {
                                 menu_data.current_selection = 1;
                                 ChangePage(menu_data.menu[i].parent)
-                                console.log("RESET PAGE "+menu_data.menu[i].parent)
                                 break;
                             }
                         }
                     } else if (event.data.data == "enter") {
                         for (let i = 0; i < menu_data.menu.length; i++) {
                             if (menu_data.menu[i].title == menu_data.current_page) {
+                                console.log("EXECUTING OPTION "+menu_data.current_selection)
                                 ActionButton(menu_data.menu[i].options[menu_data.current_selection - 1].action)
                                 break;
                             }
                         }
                     } else if (event.data.data == "up") {
-                        console.log(menu_data.current_selection)
                         menu_data.current_selection--;
-                        console.log(menu_data.current_selection)
                         ChangePage(menu_data.current_page);
                     } else if (event.data.data == "down") {
-                        console.log(menu_data.current_selection)
                         menu_data.current_selection++;
-                        console.log(menu_data.current_selection)
                         ChangePage(menu_data.current_page);
                     }
                 }
             });
 
             function ChangePage(newPage) {
-                console.log("LOADING PAGE: "+newPage)
-
                 if (newPage == "close") {
                     $.post("https://"+menu_data.resource+"/close", JSON.stringify({}));
                     return;
@@ -217,14 +211,13 @@
                       title.classList.add("item");
 
                       let title_span = document.createElement("span");
-                      title_span.innerHTML = menu_data.current_page;
+                      title_span.innerHTML = menu_data.current_page+"<img src='overlay.gif'>";
 
                       title.appendChild(title_span);
                       container.appendChild(title);
 
                       if (menu_data.current_selection < 1) {
                         menu_data.current_selection = 1;
-                        console.log("UNDER 1 IS NOT POSSIBLE")
                       } else if (menu_data.current_selection > menu_data.menu[i].options.length) {
                         menu_data.current_selection = menu_data.menu[i].options.length
                       }
